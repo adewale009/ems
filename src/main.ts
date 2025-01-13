@@ -1,0 +1,67 @@
+import { NestFactory } from '@nestjs/core';
+import { AppModule } from './app.module';
+import { ConfigService } from '@nestjs/config';
+import { NestExpressApplication } from '@nestjs/platform-express';
+import { Logger } from '@nestjs/common';
+import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import { ResponseInterceptor } from '@shared/interceptors/response.interceptor';
+import { AuthorizationGuard } from '@shared/guards/authorization.guard';
+
+async function bootstrap() {
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
+  const configService = app.get(ConfigService);
+  const { port, swaggerApiRoot } = configService.get('common');
+
+  const PRODUCT_NAME = 'Employeesystem';
+  const PRODUCT_TAG = 'employeesystem';
+  const PRODUCT_VERSION = '1.0.0';
+
+  // Determine the allowed origins
+  const whitelist = configService
+    .get<string>('CORS_WHITELIST')
+    .split(',')
+    .map((pattern) => new RegExp(pattern));
+
+  // Enable localhost on dev/staging servers only
+  if ([undefined, 'development', 'localhost'].includes(process.env.NODE_ENV)) {
+    whitelist.push(/http(s)?:\/\/localhost:/);
+  }
+
+  Logger.log(`Approved domains: ${whitelist.join(',')}`);
+
+  // Set cors options
+  const options = {
+    origin: whitelist,
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    allowedHeaders: [
+      'Origin',
+      'X-Requested-With',
+      'Content-Type',
+      'Accept',
+      'Authorization',
+      'Cache-control',
+    ],
+    credentials: true,
+  };
+  app.enableCors(options);
+  app.useGlobalInterceptors(new ResponseInterceptor());
+  app.useGlobalGuards(new AuthorizationGuard(configService));
+
+  const swaggerOptions = new DocumentBuilder()
+    .setTitle(`${PRODUCT_NAME} API Documentation`)
+    .setDescription('List of all the APIs for TOYE API.')
+    .setVersion(PRODUCT_VERSION)
+    .addTag(PRODUCT_TAG)
+    .addBearerAuth()
+    .build();
+
+  const document = SwaggerModule.createDocument(app, swaggerOptions);
+  SwaggerModule.setup(swaggerApiRoot, app, document);
+
+  await app.listen(port);
+  Logger.log(
+    `${PRODUCT_NAME} core service running on port ${port}: visit http://localhost:${port}/${swaggerApiRoot}`,
+  );
+}
+
+bootstrap();
