@@ -3,6 +3,7 @@ import { EmployeeService } from '../services/employee.service';
 import { CreateEmployeeDto } from '../dtos/createEmployee.dto';
 import { RoleService } from '../../core/services/role.service';
 import { Usecase } from '@broker/types';
+import { EntityManager } from 'typeorm';
 
 @Injectable()
 export class CreateEmployeeUsecase extends Usecase {
@@ -15,7 +16,7 @@ export class CreateEmployeeUsecase extends Usecase {
     super();
   }
 
-  async execute(createEmployeeDto: CreateEmployeeDto) {
+  async execute(entityManager: EntityManager, createEmployeeDto: CreateEmployeeDto) {
     this.logger.log('Executing CreateEmployeeUsecase');
 
     const roleEntity = await this.roleService.findOneById(createEmployeeDto.role);

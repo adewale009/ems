@@ -12,6 +12,7 @@ import { DeleteDepartmentUsecase } from './usecases/deleteDepartment.usecase';
 import { Broker } from 'src/broker/broker';
 import { EmployeeModule } from '@modules/employee/employee.module';
 import { CoreModule } from '@modules/core/core.module';
+import { FetchAllDepartmentsUsecase } from './usecases/fetchAllDepartmentsUsecase';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { CoreModule } from '@modules/core/core.module';
     UpdateDepartmentUsecase,
     FetchDepartmentUsecase,
     DeleteDepartmentUsecase,
+    FetchAllDepartmentsUsecase,
   ],
   exports: [
     DepartmentService,
@@ -36,6 +38,7 @@ import { CoreModule } from '@modules/core/core.module';
     UpdateDepartmentUsecase,
     FetchDepartmentUsecase,
     DeleteDepartmentUsecase,
+    FetchAllDepartmentsUsecase,
   ],
 })
 export class DepartmentModule {}

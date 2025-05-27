@@ -10,9 +10,7 @@ import { OnboardingModule } from '@modules/onboarding/onboarding.module';
 import { AuthModule } from '@modules/auth/auth.module';
 import { JwtAuthGuard } from '@modules/auth/guards/jwtAuth.guard';
 import { APP_GUARD } from '@nestjs/core';
-import { PropertyModule } from '@modules/property/property.module';
-import { FilterModule } from '@modules/filters/filters.module';
-import { LocationModule } from '@modules/location/location.module';
+// import { FilterModule } from '@modules/filters/filters.module';
 import { EmployeeModule } from './modules/employee/employee.module';
 import { DepartmentModule } from './modules/department/department.module';
 import { CoreModule } from '@modules/core/core.module';
@@ -27,22 +25,10 @@ import { CoreModule } from '@modules/core/core.module';
       inject: [ConfigService],
       useFactory: async (configService: ConfigService) => configService.get('typeorm'),
     }),
-    // TypeOrmModule.forRoot({
-    //   type: 'postgres',
-    //   host: 'localhost',
-    //   port: 5432,
-    //   username: 'user',
-    //   password: 'password',
-    //   database: 'db',
-    //   entities: [Role /*Employee*/],
-    //   synchronize: true, // Turn off in production
-    // }),
     UtilsModule,
     OnboardingModule,
     AuthModule,
-    PropertyModule,
-    FilterModule,
-    LocationModule,
+    /*FilterModule,*/
     EmployeeModule,
     CoreModule,
     DepartmentModule,

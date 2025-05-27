@@ -10,6 +10,7 @@ import {
   Get,
   Delete,
   Param,
+  UseGuards,
 } from '@nestjs/common';
 import { ApiOperation, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { CustomFieldValidationPipe } from '@shared/validations/custom.validation';
@@ -25,6 +26,8 @@ import { FetchEmployeeUsecase } from '../usecases/fetchEmployee.usecase';
 import { AssignRoleToEmployeeUsecase } from '../usecases/assignRoleToEmployee.usecase';
 import { AssignEmployeeToDepartmentUsecase } from '../usecases/assignEmployeeToDepartment.usecase';
 import { AssignToDepartmentDto } from '../dtos/assignToDepartment.dto';
+import { Public } from '@shared/decorators/isPublic.decorator';
+import { AuthorizationGuard } from '@shared/guards/authorization.guard';
 
 @ApiTags('Employees')
 @Controller('employees/')
@@ -41,7 +44,9 @@ export class EmployeeController {
     private readonly assignEmployeeToDepartmentUsecase: AssignEmployeeToDepartmentUsecase,
   ) {}
 
-  @Post()
+  @Public()
+  @UseGuards(AuthorizationGuard)
+  @Post('create-employee')
   @HttpCode(HttpStatus.CREATED)
   @ApiOperation({ operationId: 'createEmployee', summary: 'Create Employee' })
   @ApiOkResponse({ status: HttpStatus.CREATED })
@@ -49,7 +54,9 @@ export class EmployeeController {
     return this.broker.runUsecases([this.createEmployeeUsecase], createEmployeeDto);
   }
 
-  @Patch('update')
+  @Public()
+  @UseGuards(AuthorizationGuard)
+  @Patch('update-employee')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ operationId: 'updateEmployee', summary: 'Update Employee' })
   @ApiOkResponse({ status: HttpStatus.OK })
@@ -65,7 +72,9 @@ export class EmployeeController {
     return this.broker.runUsecases([this.fetchEmployeeUsecase], fetchEmployeeDto);
   }
 
-  @Delete('delete')
+  @Public()
+  @UseGuards(AuthorizationGuard)
+  @Delete('delete-employee')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ operationId: 'deleteEmployee', summary: 'Delete Employee' })
   @ApiOkResponse({ status: HttpStatus.OK })
@@ -73,6 +82,8 @@ export class EmployeeController {
     return this.broker.runUsecases([this.deleteEmployeeUsecase], deleteEmployeeDto);
   }
 
+  @Public()
+  @UseGuards(AuthorizationGuard)
   @Patch(':employeeId/assign-role/:roleId')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ operationId: 'assignRoleToEmployee', summary: 'Assign Role to Employee' })
@@ -89,6 +100,8 @@ export class EmployeeController {
     });
   }
 
+  @Public()
+  @UseGuards(AuthorizationGuard)
   @Patch('assign-department')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({

@@ -2,6 +2,8 @@ import { forwardRef, Inject, Injectable, Logger } from '@nestjs/common';
 import { DepartmentRepository } from '@adapters/repositories/department.repository';
 import { Department } from '@modules/core/entities/department.entity';
 import { UpdateDepartmentDto } from '../dtos/updateDepartment.dto';
+import { EntityManager } from 'typeorm';
+import { FetchAllDepartmentsDto } from '../dtos/FetchAllDepartmentsDto';
 
 @Injectable()
 export class DepartmentService {
@@ -13,27 +15,37 @@ export class DepartmentService {
   ) {}
 
   async createDepartment(createDepartmentDto: Partial<Department>): Promise<Department> {
-    this.logger.log(`Creating department with data: ${JSON.stringify(createDepartmentDto)}`);
-    return this.departmentRepository.createDepartment(createDepartmentDto);
+    console.log(createDepartmentDto);
+    const newDepartment = this.departmentRepository.create(createDepartmentDto);
+    return await this.departmentRepository.save(newDepartment);
   }
 
-  async findAllDepartments(): Promise<Department[]> {
+  async findAllDepartments(filters: FetchAllDepartmentsDto): Promise<Department[]> {
     this.logger.log('Fetching all departments');
-    return this.departmentRepository.getAllDepartments();
+    return this.departmentRepository.getAllDepartments(filters);
   }
 
   async findDepartmentById(id: string): Promise<Department> {
     this.logger.log(`Fetching department with ID: ${id}`);
-    return this.departmentRepository.findDepartmentAndFailIfNotExist({ where: { id } });
+    return await this.departmentRepository.findOneById(id);
   }
 
-  async updateDepartment(id: string, updateData: UpdateDepartmentDto): Promise<Department> {
-    this.logger.log(`Updating department with ID: ${id}`);
-    return this.departmentRepository.updateDepartment({ where: { id } }, updateData);
+  async updateDepartment(
+    entityManager: EntityManager,
+    input: UpdateDepartmentDto,
+  ): Promise<Department> {
+    const department = await this.departmentRepository.findDepartmentAndFailIfNotExist(
+      entityManager,
+      input.id,
+    );
+
+    Object.assign(department, input);
+
+    return await entityManager.save(department);
   }
 
-  async deleteDepartment(id: string): Promise<void> {
+  async deleteDepartment(entityManager: EntityManager, id: string): Promise<void> {
     this.logger.log(`Deleting department with ID: ${id}`);
-    await this.departmentRepository.deleteDepartmentById(id);
+    await this.departmentRepository.deleteDepartmentById(entityManager, id);
   }
 }

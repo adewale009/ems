@@ -9,17 +9,24 @@ import {
   Post,
   Get,
   Delete,
+  UseGuards,
+  Param,
+  ParseUUIDPipe,
+  Query,
 } from '@nestjs/common';
 import { ApiOperation, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { CustomFieldValidationPipe } from '@shared/validations/custom.validation';
 import { CreateDepartmentDto } from '../dtos/createDepartment.dto';
 import { UpdateDepartmentDto } from '../dtos/updateDepartment.dto';
-import { FetchDepartmentDto } from '../dtos/fetchDepartment.dto';
 import { DeleteDepartmentDto } from '../dtos/deleteDepartment.dto';
 import { DeleteDepartmentUsecase } from '../usecases/deleteDepartment.usecase';
 import { CreateDepartmentUsecase } from '../usecases/createDepartment.usecase';
 import { UpdateDepartmentUsecase } from '../usecases/updateDepartment.usecase';
 import { FetchDepartmentUsecase } from '../usecases/fetchDepartment.usecase';
+import { Public } from '@shared/decorators/isPublic.decorator';
+import { AuthorizationGuard } from '@shared/guards/authorization.guard';
+import { FetchAllDepartmentsUsecase } from '../usecases/fetchAllDepartmentsUsecase';
+import { FetchAllDepartmentsDto } from '../dtos/FetchAllDepartmentsDto';
 
 @ApiTags('Departments')
 @Controller('departments/')
@@ -32,9 +39,12 @@ export class DepartmentController {
     private readonly updateDepartmentUsecase: UpdateDepartmentUsecase,
     private readonly fetchDepartmentUsecase: FetchDepartmentUsecase,
     private readonly deleteDepartmentUsecase: DeleteDepartmentUsecase,
+    private readonly fetchAllDepartmentsUsecase: FetchAllDepartmentsUsecase,
   ) {}
 
-  @Post('create')
+  @Public()
+  @UseGuards(AuthorizationGuard)
+  @Post('create-department')
   @HttpCode(HttpStatus.CREATED)
   @ApiOperation({ operationId: 'createDepartment', summary: 'Create Department' })
   @ApiOkResponse({ status: HttpStatus.CREATED })
@@ -44,7 +54,8 @@ export class DepartmentController {
     return this.broker.runUsecases([this.createDepartmentUsecase], createDepartmentDto);
   }
 
-  @Patch('update')
+  @Public()
+  @Patch('update-department')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ operationId: 'updateDepartment', summary: 'Update Department' })
   @ApiOkResponse({ status: HttpStatus.OK })
@@ -54,17 +65,28 @@ export class DepartmentController {
     return this.broker.runUsecases([this.updateDepartmentUsecase], updateDepartmentDto);
   }
 
-  @Get()
+  @Public()
+  @Get('department-all')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ operationId: 'findAllDepartments', summary: 'Fetch All Departments' })
   @ApiOkResponse({ status: HttpStatus.OK })
   async findAllDepartments(
-    @Body(CustomFieldValidationPipe) fetchDepartmentDto: FetchDepartmentDto,
+    @Query(CustomFieldValidationPipe) fetchAllDepartmentsDto: FetchAllDepartmentsDto,
   ) {
-    return this.broker.runUsecases([this.fetchDepartmentUsecase], fetchDepartmentDto);
+    return this.broker.runUsecases([this.fetchAllDepartmentsUsecase], fetchAllDepartmentsDto);
   }
 
-  @Delete('delete')
+  @Public()
+  @Get('/:id')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ operationId: 'findDepartmentById', summary: 'Fetch Department by ID' })
+  @ApiOkResponse({ status: HttpStatus.OK })
+  async findDepartmentById(@Param('id', ParseUUIDPipe) id: string) {
+    return this.broker.runUsecases([this.fetchDepartmentUsecase], { id });
+  }
+
+  @Public()
+  @Delete('delete-department')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ operationId: 'deleteDepartment', summary: 'Delete Department' })
   @ApiOkResponse({ status: HttpStatus.OK })

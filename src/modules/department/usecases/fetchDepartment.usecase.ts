@@ -2,6 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { DepartmentService } from '../services/department.service';
 import { Department } from '../../core/entities/department.entity';
 import { Usecase } from '@broker/types';
+import { EntityManager } from 'typeorm';
 
 @Injectable()
 export class FetchDepartmentUsecase extends Usecase {
@@ -11,12 +12,16 @@ export class FetchDepartmentUsecase extends Usecase {
     super();
   }
 
-  async execute(id?: string): Promise<Department | Department[]> {
-    if (id) {
-      this.logger.log(`Fetching department with ID: ${id}`);
-      return this.departmentService.findDepartmentById(id);
+  async execute(
+    entityManager: EntityManager,
+    data: { id: string },
+  ): Promise<Department | Department[]> {
+    if (data) {
+      this.logger.log(`Fetching department with ID: ${data.id}`);
+      return this.departmentService.findDepartmentById(data.id);
     }
-    this.logger.log('Fetching all departments');
-    return this.departmentService.findAllDepartments();
+    this.logger.log(
+      `Fetching department with ID: ${JSON.stringify(data.id)}, typeof: ${typeof data}`,
+    );
   }
 }

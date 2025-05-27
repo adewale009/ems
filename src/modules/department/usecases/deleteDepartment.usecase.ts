@@ -1,6 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { DepartmentService } from '../services/department.service';
 import { Usecase } from '@broker/types';
+import { EntityManager } from 'typeorm';
 
 @Injectable()
 export class DeleteDepartmentUsecase extends Usecase {
@@ -10,8 +11,8 @@ export class DeleteDepartmentUsecase extends Usecase {
     super();
   }
 
-  async execute(id: string) {
+  async execute(entityManager: EntityManager, data: { id: string }) {
     this.logger.log('Executing DeleteDepartmentUsecase');
-    return this.departmentService.deleteDepartment(id);
+    return this.departmentService.deleteDepartment(entityManager, data.id);
   }
 }

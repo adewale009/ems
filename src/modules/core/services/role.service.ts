@@ -18,11 +18,6 @@ export class RoleService {
     return this.roleRepository.getAllRoles();
   }
 
-  // async findOneById(id): Promise<Role> {
-  //   this.logger.log(`Fetching role by ID: ${id}`);
-  //   return this.roleRepository.findRoleAndFailIfNotExist(id);
-  // }
-
   async findOneById(roleId: string) {
     const role = await this.roleRepository.findOne({ where: { id: roleId } });
     if (!role) {
