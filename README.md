@@ -34,7 +34,7 @@ Built for maintainability using:
 
 ---
 
-## ⚙Architecture & Workflow
+## Architecture & Workflow
 
 follows a layered Clean Architecture structure with Domain-Driven Design:
 
