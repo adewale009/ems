@@ -2,84 +2,208 @@
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
 </p>
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+<h2 align="center">Employee Management System (EMS)</h2>
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
+<p align="center">A modular, scalable backend system for managing employees and departments, built with NestJS, PostgreSQL, and TypeORM.</p>
+
+<p align="center">
+  <a href="https://nestjs.com/" target="_blank"><img src="https://img.shields.io/badge/framework-nestjs-red.svg" alt="NestJS" /></a>
+  <a href="https://www.postgresql.org/" target="_blank"><img src="https://img.shields.io/badge/database-postgresql-blue.svg" alt="PostgreSQL" /></a>
+  <a href="https://www.typescriptlang.org/" target="_blank"><img src="https://img.shields.io/badge/language-typescript-yellow.svg" alt="TypeScript" /></a>
 </p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
 
-## Description
+---
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## Project Overview
 
-## Project setup
+This Employee Management System (EMS) provides a backend API to manage:
+
+- Employee records
+- Department assignments
+- Modular scalability for future RBAC, role assignments, pagination, file uploads, and more
+
+Built for maintainability using:
+
+- **NestJS**
+- **PostgreSQL**
+- **TypeORM**
+- **Clean Architecture**
+- **SOLID Principles**
+
+**GitHub Repo:** [github.com/adewale009/ems](https://github.com/adewale009/ems)
+
+---
+
+## ⚙Architecture & Workflow
+
+follows a layered Clean Architecture structure with Domain-Driven Design:
+
+Controller → Broker → Use Case → Service → Repository → Database
+
+
+Each module is self-contained and follows the atomic file structure. Code is separated into layers for testability and clarity.
+
+---
+
+## Modules
+
+### Employee Module
+
+- **Create Employee**
+- **Get All Employees**
+- **Get Single Employee**
+- **Update Employee**
+- **Delete Employee**
+- **Assign to Department**
+
+#### Employee Endpoints
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST   | `/create-employee` | Create a new employee |
+| GET    | `/employees` | Get list of all employees |
+| GET    | `/get-employee` | Get a single employee by ID |
+| PATCH  | `/update-employee` | Update an employee |
+| DELETE | `/delete-employee` | Delete an employee |
+| PATCH  | `/assign-department` | Assign employee to a department |
+
+---
+
+### Department Module
+
+- **Create Department**
+- **Get All Departments**
+- **Get Single Department**
+- **Update Department**
+- **Delete Department**
+
+#### Department Endpoints
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST   | `/create-department` | Create a new department |
+| GET    | `/department-all` | Get list of all departments |
+| GET    | `/:id` | Get a department by ID |
+| PATCH  | `/update-department` | Update a department |
+| DELETE | `/delete-department` | Delete a department |
+
+---
+
+## Process Flow Example
+
+### Creating & Assigning an Employee
+
+Client → Controller → Broker → CreateEmployeeUseCase  
+→ EmployeeService → EmployeeRepository → PostgreSQL
+
+Then:  
+Client → Controller → Broker → AssignEmployeeToDepartmentUseCase  
+→ DepartmentService → DepartmentRepository → PostgreSQL
+→ Validates employee & department → Saves relation
+
+
+---
+
+## Tech Stack
+
+- **Backend Framework:** NestJS (TypeScript)
+- **Database:** PostgreSQL
+- **ORM:** TypeORM
+- **Docs:** Swagger (OpenAPI)
+- **Testing:** Jest
+- **Dev Tools:** ESLint, Prettier, Postman
+
+---
+
+## API Documentation
+
+- Swagger UI: [http://localhost:3001/api](http://localhost:3001/api)  
+
+---
+
+## Postman Collection
+
+- Postman Collection: [EMS Postman Docs]([https://www.postman.com/collections/your-postman-link-here](https://grey-meadow-397736.postman.co/workspace/59e77523-bda8-45cf-9d9d-64c624e195ba/collection/26326672-6c96be8a-dfd3-4655-9601-bdb17f5f660c?action=share&source=copy-link&creator=26326672)) 
+
+---
+
+## Blockers & Resolutions
+
+### Circular Dependencies
+- **Problem:** Module import loops broke DI
+- **Solution:** Restructured into clean module boundaries using CoreModule and dependency injection.
+
+###  Employee–Department Link Logic
+- **Problem:** No logic to assign employees to departments
+- **Solution:** Introduced a broker and `AssignDepartmentUseCase` to bridge logic properly.
+
+### DB Setup Issues
+- **Problem:** PostgreSQL config differed across systems
+- **Solution:** Added `.env.example`, standard PostgreSQL config, and recommended Docker option for local DB.
+
+### Testing On Postman Issues
+- **Problem:** Bugs while testing
+- **Solution:** Debugged the codebase, mostly the usecases and service logics
+---
+
+## Running Locally
 
 ```bash
-$ npm install
+# 1. Clone the repo
+git clone https://github.com/adewale009/ems.git
+cd ems
+
+# 2. Install dependencies
+npm install
+
+# 3. Set up environment variables
+cp .env.example .env
+
+# 4. Run DB migrations if needed
+npm run migration:run
+
+# 5. Start development server
+npm run start:dev
+
+# Swagger available at http://localhost:3000/api
 ```
+## Running Tests
 
-## Compile and run the project
+# Unit tests
+npm run test
 
-```bash
-# development
-$ npm run start
+# E2E tests
+npm run test:e2e
 
-# watch mode
-$ npm run start:dev
+# Coverage report
+npm run test:cov
 
-# production mode
-$ npm run start:prod
+``` ## Future Improvements
 ```
+# Role-Based Access Control (RBAC)
 
-## Run tests
+# Full Audit Logs
 
-```bash
-# unit tests
-$ npm run test
+# Webhooks for HR notifications
 
-# e2e tests
-$ npm run test:e2e
+# Cloud-based DB config (for staging/production)
 
-# test coverage
-$ npm run test:cov
-```
+# CI/CD Integration with GitHub Actions or CircleCI
 
-## Resources
+# Image/File uploads
 
-Check out a few resources that may come in handy when working with NestJS:
+# Pagination, Filtering & Sorting
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+## Maintainer
+Adewale – Backend Developer
 
-## Support
+Architected project structure
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+Implemented core modules and business logic
 
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+Led documentation and code quality
 
 ## License
+This project is open-sourced under the MIT license.
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+docs: replaced default readme with complete EMS documentation
