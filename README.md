@@ -169,30 +169,29 @@ npm run start:dev
 ```
 ## Running Tests
 
-# Unit tests
+- Unit tests
 npm run test
 
-# E2E tests
+- E2E tests
 npm run test:e2e
 
-# Coverage report
+- Coverage report
 npm run test:cov
 
-``` ## Future Improvements
-```
-# Role-Based Access Control (RBAC)
+## Future Improvements
+- Role-Based Access Control (RBAC)
 
-# Full Audit Logs
+- Full Audit Logs
 
-# Webhooks for HR notifications
+- Webhooks for HR notifications
 
-# Cloud-based DB config (for staging/production)
+- Cloud-based DB config (for staging/production)
 
-# CI/CD Integration with GitHub Actions or CircleCI
+- CI/CD Integration with GitHub Actions or CircleCI
 
-# Image/File uploads
+- Image/File uploads
 
-# Pagination, Filtering & Sorting
+- Pagination, Filtering & Sorting
 
 ## Maintainer
 Adewale – Backend Developer
