@@ -95,4 +95,6 @@ export class DepartmentController {
   ) {
     return this.broker.runUsecases([this.deleteDepartmentUsecase], deleteDepartmentDto);
   }
+
+  // delete all
 }
